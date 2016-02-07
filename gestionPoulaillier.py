@@ -48,14 +48,22 @@ def openDoor():
   for i in range(15,21):
     echoPWM(i/10.0)
     time.sleep(0.2)
-  etatPorte = 
-    
+
 def closeDoor():
   if (lastValue == 200.0):
     breakDoor(lastValue)
   for i in reversed(range(10,16)):
     echoPWM(i/10.0)
     time.sleep(0.2)
+
+def emergencyBreakDoor():
+  os.system("echo 2=150 > /dev/servoblaster")
+  lastValue = 150
+
+def readHallOpennedDoor():
+  return True;
+def readHallClosedDoor():
+  return True;
 
 #USAGE : 
 # openDoor() activate PWM smoothly in one direction
@@ -68,6 +76,8 @@ o.lat='48.395574'
 o.long='-4.333449'
 o.horizon = '-6'
 etatPorte = 'fermee'
+porteOuverte = readHallOpennedDoor()
+porteFermee = readHallClosedDoor()
 
 while True:
   s=ephem.Sun()
@@ -79,7 +89,19 @@ while True:
     print "Le soleil est leve, la porte doit etre ouverte"
     if (etatPorte == 'fermee'):
       openDoor()
+      #on a lance l'ouverture, il faut freiner la porte si elle est ouverte
+      #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
+      #Aimant commande le 07/02/2016 (21 a 32jours)
+      while (not porteOuverte):
+        time.sleep(0.01)
+      breakDoor()
   elif(maintenant > fermeturePorte):
-      print "Le soleil est couche, la porte doit etre fermee"
+    print "Le soleil est couche, la porte doit etre fermee"
     if (etatPorte == 'fermee'):
       closeDoor()
+      #on a lance la fermeture, il faut freiner la porte si elle est fermee
+      #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
+      #Aimant commande le 07/02/2016 (21 a 32jours)
+      while (not porteFermee):
+        time.sleep(0.01)
+      breakDoor()
