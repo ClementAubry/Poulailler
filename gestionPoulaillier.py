@@ -107,7 +107,7 @@ try:
           time.sleep(0.01)
         breakDoor()
 except (KeyboardInterrupt, SystemExit):
-  print "Arrêt du programme par Ctrl+c"
+  print "Arret du programme par Ctrl+c"
   raise
 except:
-  print "Arrêt du programme..."
+  print "Arret du programme..."
