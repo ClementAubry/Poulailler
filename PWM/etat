@@ -1,1 +1,0 @@
-La partie threading ne fonctionne pas, on ne peut appeler start d'un thread qu'une seule fois.

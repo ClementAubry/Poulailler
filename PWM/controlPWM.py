@@ -1,7 +1,6 @@
 # Import des modules
 import os
 import time
-import threading
 
 #Inspired from http://stephane.lavirotte.com/perso/rov/esc_brushless_raspberry.html
 # with GPIO mapping here : http://deusyss.developpez.com/tutoriels/RaspberryPi/PythonEtLeGpio/#LII-D
@@ -14,10 +13,6 @@ import threading
 #5 on P1-16 GPIO-23
 #6 on P1-18 GPIO-24
 #7 on P1-22 GPIO-25
-def runVentilThread():
-	print("Started!")           # affiche "Thread-x started!"
-	time.sleep(5)               # simule un travail d'une seconde
-	print("Finished!")          # affiche "Thread-x finished!"
 
 #in milliseconds
 minDuty=1
@@ -27,8 +22,6 @@ maxDuty=2
 sens=True
 dutyStep=0.5
 lastValue=meanDuty
-
-threadVentil = threading.Thread(target=runVentilThread)
 
 def breakDoor(lastVal):
 	if (lastVal > int(meanDuty*100)):
@@ -45,16 +38,7 @@ def breakDoor(lastVal):
 		print "error in breakDoor function"
 	return lastVal
 
-def echoPWMVentil(highValueMs):
-	os.system("echo 6={0} > /dev/servoblaster".format(highValueMs*100))
-	return highValueMs*100
-
 def echoPWM(highValueMs):
-	if (not threadVentil.isAlive()):
-		#threadVentil = threading.Thread(target=runVentilThread)
-		#threadVentil.start()
-		threadVentil.run()
-
 	os.system("echo 2={0} > /dev/servoblaster".format(highValueMs*100))
 	return highValueMs*100
 
@@ -75,15 +59,6 @@ def closeDoor():
 		time.sleep(0.2)
 		print(i/10.0)
 	return i*10
-
-
-#print "openning door"
-#openDoor()
-#print "door open"
-#print "closing door"
-#closeDoor()
-#print "door closed"
-#exit()
 
 print "l = move to the left"
 print "r = move to the right"
