@@ -79,29 +79,35 @@ etatPorte = 'fermee'
 porteOuverte = readHallOpennedDoor()
 porteFermee = readHallClosedDoor()
 
-while True:
-  s=ephem.Sun()
-  s.compute()
-  ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
-  fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
-  maintenant = ephem.now()
-  if (maintenant > ouverturePorte):
-    print "Le soleil est leve, la porte doit etre ouverte"
-    if (etatPorte == 'fermee'):
-      openDoor()
-      #on a lance l'ouverture, il faut freiner la porte si elle est ouverte
-      #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
-      #Aimant commande le 07/02/2016 (21 a 32jours)
-      while (not porteOuverte):
-        time.sleep(0.01)
-      breakDoor()
-  elif(maintenant > fermeturePorte):
-    print "Le soleil est couche, la porte doit etre fermee"
-    if (etatPorte == 'fermee'):
-      closeDoor()
-      #on a lance la fermeture, il faut freiner la porte si elle est fermee
-      #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
-      #Aimant commande le 07/02/2016 (21 a 32jours)
-      while (not porteFermee):
-        time.sleep(0.01)
-      breakDoor()
+try:
+  while True:
+    s=ephem.Sun()
+    s.compute()
+    ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
+    fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
+    maintenant = ephem.now()
+    if (maintenant > ouverturePorte):
+      print "Le soleil est leve, la porte doit etre ouverte"
+      if (etatPorte == 'fermee'):
+        openDoor()
+        #on a lance l'ouverture, il faut freiner la porte si elle est ouverte
+        #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
+        #Aimant commande le 07/02/2016 (21 a 32jours)
+        while (not porteOuverte):
+          time.sleep(0.01)
+        breakDoor()
+    elif(maintenant > fermeturePorte):
+      print "Le soleil est couche, la porte doit etre fermee"
+      if (etatPorte == 'fermee'):
+        closeDoor()
+        #on a lance la fermeture, il faut freiner la porte si elle est fermee
+        #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
+        #Aimant commande le 07/02/2016 (21 a 32jours)
+        while (not porteFermee):
+          time.sleep(0.01)
+        breakDoor()
+except (KeyboardInterrupt, SystemExit):
+  print "Arrêt du programme par Ctrl+c"
+  raise
+except:
+  print "Arrêt du programme..."
