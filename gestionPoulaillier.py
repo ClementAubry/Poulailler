@@ -22,7 +22,7 @@ maxDuty=2
 
 sens=True
 dutyStep=0.5
-lastValue=meanDuty
+lastValue=meanDuty 
 
 def echoPWM(highValueMs):
   os.system("echo 2={0} > /dev/servoblaster".format(highValueMs*100))
