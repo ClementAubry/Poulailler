@@ -26,9 +26,9 @@ import datetime
 GPIO.setmode(GPIO.BCM)
 
 print "Setup GPIO pin as input"
-
+pinput=2
 # Set Switch GPIO as input
-GPIO.setup(17 , GPIO.IN)
+GPIO.setup(pinput , GPIO.IN)
 
 def sensorCallback1(channel):
   # Called if sensor output goes LOW
@@ -49,8 +49,8 @@ def main():
   # the user seeing lots of unnecessary error
   # messages.
   
-  GPIO.add_event_detect(17, GPIO.FALLING, callback=sensorCallback1)  
-  GPIO.add_event_detect(17, GPIO.RISING, callback=sensorCallback2) 
+  GPIO.add_event_detect(pinput, GPIO.FALLING, callback=sensorCallback1)  
+  GPIO.add_event_detect(pinput, GPIO.RISING, callback=sensorCallback2) 
   
   try:
     # Loop until users quits with CTRL-C
