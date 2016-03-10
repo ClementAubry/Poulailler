@@ -15,6 +15,11 @@ import ephem
 #6 on P1-18 GPIO-24
 #7 on P1-22 GPIO-25
 
+pinHallDoorHigh=2
+pinHallDoorLow=3
+GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
+GPIO.setup(pinHallDoorHigh, GPIO.IN)
+GPIO.setup(pinHallDoorLow, GPIO.IN)
 #in milliseconds
 minDuty=1
 meanDuty=1.5
@@ -60,10 +65,22 @@ def emergencyBreakDoor():
   os.system("echo 2=150 > /dev/servoblaster")
   lastValue = 150
 
-def readHallOpennedDoor():
-  return True;
-def readHallClosedDoor():
-  return True;
+def callbackHallDoorHigh():
+  if GPIO.input(pinHallDoorHigh):  
+    print "La porte se ferme"
+  else:  
+    print "La porte est ouverte"
+    breakDoor()
+    etatPorte='ouverte'
+
+def callbackHallDoorLow():
+  if GPIO.input(pinHallDoorLow):  
+    print "La porte s'ouvre"
+  else:  
+    print "La porte est fermee"
+    breakDoor()
+    etatPorte='fermee'
+
 
 #USAGE : 
 # openDoor() activate PWM smoothly in one direction
@@ -76,8 +93,9 @@ o.lat='48.395574'
 o.long='-4.333449'
 o.horizon = '-6'
 etatPorte = 'fermee'
-porteOuverte = readHallOpennedDoor()
-porteFermee = readHallClosedDoor()
+
+GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
+GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
 
 try:
   while True:
@@ -86,7 +104,7 @@ try:
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
     fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
     maintenant = ephem.now()
-    if (maintenant > ouverturePorte):
+    if (1):#(maintenant > ouverturePorte):
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
         openDoor()
@@ -95,17 +113,11 @@ try:
         #Aimant commande le 07/02/2016 (21 a 32jours)
         while (not porteOuverte):
           time.sleep(0.01)
-        breakDoor()
-    elif(maintenant > fermeturePorte):
+    elif(1):#(maintenant > fermeturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
-      if (etatPorte == 'fermee'):
+      if (etatPorte == 'ouverte'):
         closeDoor()
-        #on a lance la fermeture, il faut freiner la porte si elle est fermee
-        #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
-        #Aimant commande le 07/02/2016 (21 a 32jours)
-        while (not porteFermee):
-          time.sleep(0.01)
-        breakDoor()
+        #on a lance la fermeture, on attend l'interruption
 except (KeyboardInterrupt, SystemExit):
   print "Arret du programme par Ctrl+c"
   raise
