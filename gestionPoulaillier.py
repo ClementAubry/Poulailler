@@ -108,11 +108,7 @@ try:
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
         openDoor()
-        #on a lance l'ouverture, il faut freiner la porte si elle est ouverte
-        #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
-        #Aimant commande le 07/02/2016 (21 a 32jours)
-        while (not porteOuverte):
-          time.sleep(0.01)
+        #on a lance l'ouverture, on attend l'interruption
     elif(1):#(maintenant > fermeturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
@@ -123,3 +119,4 @@ except (KeyboardInterrupt, SystemExit):
   raise
 except:
   print "Arret du programme..."
+  raise

@@ -13,9 +13,9 @@ pinHall=2
 # Define a threaded callback function to run in another thread when events are detected  
 def my_callback(channel):  
     if GPIO.input(pinHall):     # if port 25 == 1  
-        print "Rising edge detected on 25"  
+        print "Rising edge detected on {0}".format(pinHall)  
     else:                  # if port 25 != 1  
-        print "Falling edge detected on 25"  
+        print "Falling edge detected on {0}".format(pinHall) 
   
 # when a changing edge is detected on port 25, regardless of whatever   
 # else is happening in the program, the function my_callback will be run  
