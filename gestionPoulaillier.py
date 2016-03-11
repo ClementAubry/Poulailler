@@ -2,6 +2,7 @@
 import os
 import time
 import ephem
+import RPi.GPIO as GPIO
 
 #Inspired from http://stephane.lavirotte.com/perso/rov/esc_brushless_raspberry.html
 # with GPIO mapping here : http://deusyss.developpez.com/tutoriels/RaspberryPi/PythonEtLeGpio/#LII-D
@@ -20,6 +21,7 @@ pinHallDoorLow=3
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(pinHallDoorHigh, GPIO.IN)
 GPIO.setup(pinHallDoorLow, GPIO.IN)
+
 #in milliseconds
 minDuty=1
 meanDuty=1.5
@@ -28,6 +30,12 @@ maxDuty=2
 sens=True
 dutyStep=0.5
 lastValue=meanDuty 
+
+o=ephem.Observer()
+o.lat='48.395574'
+o.long='-4.333449'
+o.horizon = '-6'
+etatPorte = 'fermee'
 
 def echoPWM(highValueMs):
   os.system("echo 2={0} > /dev/servoblaster".format(highValueMs*100))
@@ -66,14 +74,16 @@ def emergencyBreakDoor():
   lastValue = 150
 
 def callbackHallDoorHigh():
+  print "callbackHallDoorHigh"
   if GPIO.input(pinHallDoorHigh):  
     print "La porte se ferme"
   else:  
     print "La porte est ouverte"
-    breakDoor()
+    emergencyBreakDoor()
     etatPorte='ouverte'
 
 def callbackHallDoorLow():
+  print "callbackHallDoorLow"
   if GPIO.input(pinHallDoorLow):  
     print "La porte s'ouvre"
   else:  
@@ -88,16 +98,11 @@ def callbackHallDoorLow():
 # breakDoor() smoothly stop PWM
 # emergencyBreakDoor() stop PWM not smoothly
 
-o=ephem.Observer()
-o.lat='48.395574'
-o.long='-4.333449'
-o.horizon = '-6'
-etatPorte = 'fermee'
 
-GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
-GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
 
 try:
+  GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
+  GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
   while True:
     s=ephem.Sun()
     s.compute()
@@ -108,18 +113,17 @@ try:
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
         openDoor()
-        #on a lance l'ouverture, il faut freiner la porte si elle est ouverte
-        #Switch a effet hall commande le 07/02/2016 (19 a 29jours)
-        #Aimant commande le 07/02/2016 (21 a 32jours)
-        while (not porteOuverte):
-          time.sleep(0.01)
+        #on a lance l'ouverture, on attend l'interruption
     elif(1):#(maintenant > fermeturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
         closeDoor()
         #on a lance la fermeture, on attend l'interruption
 except (KeyboardInterrupt, SystemExit):
+  GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
-  raise
+  raise 
 except:
+  GPIO.cleanup()
   print "Arret du programme..."
+  raise 
