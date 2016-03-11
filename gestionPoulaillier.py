@@ -73,7 +73,7 @@ def emergencyBreakDoor():
   os.system("echo 2=150 > /dev/servoblaster")
   lastValue = 150
 
-def callbackHallDoorHigh():
+def callbackHallDoorHigh(channel):
   print "callbackHallDoorHigh"
   if GPIO.input(pinHallDoorHigh):  
     print "La porte se ferme"
@@ -82,7 +82,7 @@ def callbackHallDoorHigh():
     emergencyBreakDoor()
     etatPorte='ouverte'
 
-def callbackHallDoorLow():
+def callbackHallDoorLow(channel):
   print "callbackHallDoorLow"
   if GPIO.input(pinHallDoorLow):  
     print "La porte s'ouvre"
@@ -112,13 +112,16 @@ try:
     if (1):#(maintenant > ouverturePorte):
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
-        openDoor()
+        print "Le soleil est leve, la porte doit etre ouverte"
+        #openDoor()
         #on a lance l'ouverture, on attend l'interruption
     elif(1):#(maintenant > fermeturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
-        closeDoor()
+        print "Le soleil est couche, la porte doit etre fermee"
+		#closeDoor()
         #on a lance la fermeture, on attend l'interruption
+	time.sleep(30)
 except (KeyboardInterrupt, SystemExit):
   GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
