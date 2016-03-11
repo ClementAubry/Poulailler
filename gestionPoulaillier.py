@@ -44,14 +44,11 @@ def echoPWM(highValueMs):
 def breakDoor():
   if (lastValue > int(meanDuty*100)):
     for i in reversed(range(15,int(lastValue/10))):
-      #print(10*i/100.0)
       echoPWM(i/10.0)
-      time.sleep(0.2)
   elif (lastValue < int(meanDuty*100)):
     for i in range(int(lastValue/10),16):
       #print(10*i/100.0)
       echoPWM(i/10.0)
-      time.sleep(0.2)
   else:
     print "error in breakDoor function"
 
@@ -60,14 +57,12 @@ def openDoor():
     breakDoor(lastValue)
   for i in range(15,21):
     echoPWM(i/10.0)
-    time.sleep(0.2)
 
 def closeDoor():
   if (lastValue == 200.0):
     breakDoor(lastValue)
   for i in reversed(range(10,16)):
     echoPWM(i/10.0)
-    time.sleep(0.2)
 
 def emergencyBreakDoor():
   os.system("echo 2=150 > /dev/servoblaster")
@@ -112,14 +107,12 @@ try:
     if (1):#(maintenant > ouverturePorte):
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
-        print "Le soleil est leve, la porte doit etre ouverte"
-        #openDoor()
+        openDoor()
         #on a lance l'ouverture, on attend l'interruption
     elif(1):#(maintenant > fermeturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
-        print "Le soleil est couche, la porte doit etre fermee"
-		#closeDoor()
+        closeDoor()
         #on a lance la fermeture, on attend l'interruption
 	time.sleep(30)
 except (KeyboardInterrupt, SystemExit):
