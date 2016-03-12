@@ -3,8 +3,8 @@
 # script by Alex Eames http://RasPi.tv  
 # http://raspi.tv/?p=6791  
   
-import RPi.GPIO as GPIO  
 from time import sleep     # this lets us have a time delay (see line 12)  
+import RPi.GPIO as GPIO  
   
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(pinHall, GPIO.IN)    # set GPIO25 as input (button)  

@@ -41,26 +41,6 @@ def echoPWM(highValueMs):
   os.system("echo 2={0} > /dev/servoblaster".format(highValueMs*100))
   lastValue = highValueMs*100
 
-def breakDoor():
-  if (lastValue > int(meanDuty*100)):
-    for i in reversed(range(15,int(lastValue/10))):
-      echoPWM(i/10.0)
-  elif (lastValue < int(meanDuty*100)):
-    for i in range(int(lastValue/10),16):
-      #print(10*i/100.0)
-      echoPWM(i/10.0)
-  else:
-    print "error in breakDoor function"
-
-def openDoor():
-  os.system("echo 2=200 > /dev/servoblaster")
-
-def closeDoor():
-  os.system("echo 2=100 > /dev/servoblaster")
-
-def emergencyBreakDoor():
-  os.system("echo 2=150 > /dev/servoblaster")
-
 def callbackHallDoorHigh(channel):
   print "callbackHallDoorHigh"
   if GPIO.input(pinHallDoorHigh):  
@@ -79,6 +59,14 @@ def callbackHallDoorLow(channel):
     breakDoor()
     etatPorte='fermee'
 
+def openDoor():
+  os.system("echo 2=200 > /dev/servoblaster")
+
+def closeDoor():
+  os.system("echo 2=100 > /dev/servoblaster")
+
+def emergencyBreakDoor():
+  os.system("echo 2=150 > /dev/servoblaster")
 
 #USAGE : 
 # openDoor() activate PWM smoothly in one direction
@@ -86,11 +74,10 @@ def callbackHallDoorLow(channel):
 # breakDoor() smoothly stop PWM
 # emergencyBreakDoor() stop PWM not smoothly
 
-
+GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
+GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
 
 try:
-  GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
-  GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
   while True:
     s=ephem.Sun()
     s.compute()
@@ -107,12 +94,12 @@ try:
       if (etatPorte == 'ouverte'):
         closeDoor()
         #on a lance la fermeture, on attend l'interruption
-	time.sleep(30)
+	  time.sleep(10)
 except (KeyboardInterrupt, SystemExit):
   GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
   raise 
-except:
+finally:
   GPIO.cleanup()
   print "Arret du programme..."
   raise 
