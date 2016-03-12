@@ -53,20 +53,13 @@ def breakDoor():
     print "error in breakDoor function"
 
 def openDoor():
-  if (lastValue == 100.0):
-    breakDoor(lastValue)
-  for i in range(15,21):
-    echoPWM(i/10.0)
+  os.system("echo 2=200 > /dev/servoblaster")
 
 def closeDoor():
-  if (lastValue == 200.0):
-    breakDoor(lastValue)
-  for i in reversed(range(10,16)):
-    echoPWM(i/10.0)
+  os.system("echo 2=100 > /dev/servoblaster")
 
 def emergencyBreakDoor():
   os.system("echo 2=150 > /dev/servoblaster")
-  lastValue = 150
 
 def callbackHallDoorHigh(channel):
   print "callbackHallDoorHigh"
