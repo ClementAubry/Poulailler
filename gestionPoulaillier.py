@@ -86,12 +86,12 @@ def callbackHallDoorLow(channel):
 # breakDoor() smoothly stop PWM
 # emergencyBreakDoor() stop PWM not smoothly
 
-
+GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
+GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
 
 try:
-  GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
-  GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
-  while True:
+  time.sleep(30)
+  while False:#True:
     s=ephem.Sun()
     s.compute()
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
@@ -107,7 +107,7 @@ try:
       if (etatPorte == 'ouverte'):
         closeDoor()
         #on a lance la fermeture, on attend l'interruption
-	time.sleep(30)
+  time.sleep(30)
 except (KeyboardInterrupt, SystemExit):
   GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
