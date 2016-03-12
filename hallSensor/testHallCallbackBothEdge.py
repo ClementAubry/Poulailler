@@ -6,9 +6,9 @@
 from time import sleep     # this lets us have a time delay (see line 12)  
 import RPi.GPIO as GPIO  
   
+pinHall=2
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(pinHall, GPIO.IN)    # set GPIO25 as input (button)  
-pinHall=2
   
 # Define a threaded callback function to run in another thread when events are detected  
 def my_callback(channel):  

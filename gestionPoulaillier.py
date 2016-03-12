@@ -78,7 +78,8 @@ GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh)
 GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
 
 try:
-  while True:
+  time.sleep(30)
+  while False:#True:
     s=ephem.Sun()
     s.compute()
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
@@ -94,7 +95,11 @@ try:
       if (etatPorte == 'ouverte'):
         closeDoor()
         #on a lance la fermeture, on attend l'interruption
+<<<<<<< HEAD
 	  time.sleep(10)
+=======
+  time.sleep(30)
+>>>>>>> 35182531ba0fea37ba480bff7a53067cecf876ec
 except (KeyboardInterrupt, SystemExit):
   GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
