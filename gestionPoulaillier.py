@@ -94,6 +94,7 @@ try:
           else:
             print "Porte ouverte"
             emergencyBreakDoor()
+            etatPorte = 'ouverte'
     elif(1):#(maintenant > fermeturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
@@ -104,6 +105,7 @@ try:
           else:
             print "Porte fermee"
             emergencyBreakDoor()
+            etatPorte = 'fermee'
     time.sleep(10)
 except (KeyboardInterrupt, SystemExit):
   GPIO.cleanup()
