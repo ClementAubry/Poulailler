@@ -78,8 +78,7 @@ GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh)
 GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
 
 try:
-  time.sleep(30)
-  while False:#True:
+  while True:
     s=ephem.Sun()
     s.compute()
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
@@ -89,17 +88,23 @@ try:
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
         openDoor()
-        #on a lance l'ouverture, on attend l'interruption
+        while(etatPorte == 'fermee'):
+          if (GPIO.input(pinHallDoorHigh)):
+            print "Atente porte ouverte"
+          else:
+            print "Porte ouverte"
+            emergencyBreakDoor()
     elif(1):#(maintenant > fermeturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
         closeDoor()
-        #on a lance la fermeture, on attend l'interruption
-<<<<<<< HEAD
-	  time.sleep(10)
-=======
-  time.sleep(30)
->>>>>>> 35182531ba0fea37ba480bff7a53067cecf876ec
+        while(etatPorte == 'ouverte'):
+          if (GPIO.input(pinHallDoorLow)):
+            print "Atente porte fermee"
+          else:
+            print "Porte fermee"
+            emergencyBreakDoor()
+    time.sleep(10)
 except (KeyboardInterrupt, SystemExit):
   GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
