@@ -38,7 +38,7 @@ o.horizon = '-6'
 etatPorte = 'fermee'
 
 def echoPWM(highValueMs):
-  os.system("echo 2={0} > /dev/servoblaster".format(highValueMs*100))
+  os.system("echo 0={0} > /dev/servoblaster".format(highValueMs*100))
   lastValue = highValueMs*100
 
 def callbackHallDoorHigh(channel):
@@ -60,13 +60,13 @@ def callbackHallDoorLow(channel):
     etatPorte='fermee'
 
 def openDoor():
-  os.system("echo 2=200 > /dev/servoblaster")
+  os.system("echo 0=180 > /dev/servoblaster")
 
 def closeDoor():
-  os.system("echo 2=100 > /dev/servoblaster")
+  os.system("echo 0=120 > /dev/servoblaster")
 
 def emergencyBreakDoor():
-  os.system("echo 2=150 > /dev/servoblaster")
+  os.system("echo 0=150 > /dev/servoblaster")
 
 #USAGE : 
 # openDoor() activate PWM smoothly in one direction
@@ -74,9 +74,9 @@ def emergencyBreakDoor():
 # breakDoor() smoothly stop PWM
 # emergencyBreakDoor() stop PWM not smoothly
 
-GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
-GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
-
+#GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
+#GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
+emergencyBreakDoor()
 try:
   while True:
     s=ephem.Sun()
@@ -106,12 +106,13 @@ try:
             print "Porte fermee"
             emergencyBreakDoor()
             etatPorte = 'fermee'
-    time.sleep(10)
+    time.sleep(0.25)
 except (KeyboardInterrupt, SystemExit):
   GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
   raise 
 finally:
   GPIO.cleanup()
+  emergencyBreakDoor()
   print "Arret du programme..."
   raise 
