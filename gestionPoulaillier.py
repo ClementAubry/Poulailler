@@ -1,5 +1,6 @@
 # Import des modules
 import os
+import sys
 import time
 import ephem
 import RPi.GPIO as GPIO
@@ -15,6 +16,15 @@ import RPi.GPIO as GPIO
 #5 on P1-16 GPIO-23
 #6 on P1-18 GPIO-24
 #7 on P1-22 GPIO-25
+
+
+#On prépare un fichier temporaire tant que le script est lancé
+pid = str(os.getpid())
+pidfile = "/tmp/gestionPoulaillerRunning.pid"
+if os.path.isfile(pidfile):
+  print "%s already exists, exiting" % pidfile
+  sys.exit()
+file(pidfile, 'w').write(pid)
 
 pinHallDoorHigh=2
 pinHallDoorLow=3
@@ -114,5 +124,7 @@ except (KeyboardInterrupt, SystemExit):
 finally:
   GPIO.cleanup()
   emergencyBreakDoor()
+  #Quand on a fini toute l'application (si celle-ci a une fin), on efface le fichier disant que l'application est lancée
+  os.unlink(pidfile)
   print "Arret du programme..."
   raise 
