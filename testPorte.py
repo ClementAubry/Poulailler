@@ -88,7 +88,7 @@ try:
     if(input == "s"):
       emergencyBreakDoor()
     if(input == "o"):
-      etatPorte = 'ouverte'
+      etatPorte = 'fermee'
       openDoor()
       while not(etatPorte == 'ouverte'):
         if (GPIO.input(pinHallDoorHigh)):
@@ -98,7 +98,7 @@ try:
           emergencyBreakDoor()
           etatPorte = 'ouverte'
     if(input == "c"):
-      etatPorte = 'fermee'
+      etatPorte = 'ouverte'
       closeDoor()
       while not(etatPorte == 'fermee'):
         if (GPIO.input(pinHallDoorLow)):
