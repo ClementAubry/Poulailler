@@ -84,7 +84,7 @@ try:
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
     fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
     maintenant = ephem.now()
-    if (etatPorte == 'fermee'):#(maintenant > ouverturePorte):
+    if(maintenant > ouverturePorte):#(etatPorte == 'fermee'):
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
         openDoor()
@@ -95,7 +95,7 @@ try:
             print "Porte ouverte"
             emergencyBreakDoor()
             etatPorte = 'ouverte'
-    elif(etatPorte == 'ouverte'):#(maintenant > fermeturePorte):
+    elif(maintenant > fermeturePorte):#(etatPorte == 'ouverte'):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
         closeDoor()
