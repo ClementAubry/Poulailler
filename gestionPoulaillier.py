@@ -18,7 +18,7 @@ import RPi.GPIO as GPIO
 #7 on P1-22 GPIO-25
 
 
-#On prépare un fichier temporaire tant que le script est lancé
+#On prepare un fichier temporaire tant que le script est lance
 pid = str(os.getpid())
 pidfile = "/tmp/gestionPoulaillerRunning.pid"
 if os.path.isfile(pidfile):
@@ -51,24 +51,6 @@ def echoPWM(highValueMs):
   os.system("echo 0={0} > /dev/servoblaster".format(highValueMs*100))
   lastValue = highValueMs*100
 
-def callbackHallDoorHigh(channel):
-  print "callbackHallDoorHigh"
-  if GPIO.input(pinHallDoorHigh):  
-    print "La porte se ferme"
-  else:  
-    print "La porte est ouverte"
-    emergencyBreakDoor()
-    etatPorte='ouverte'
-
-def callbackHallDoorLow(channel):
-  print "callbackHallDoorLow"
-  if GPIO.input(pinHallDoorLow):  
-    print "La porte s'ouvre"
-  else:  
-    print "La porte est fermee"
-    breakDoor()
-    etatPorte='fermee'
-
 def openDoor():
   os.system("echo 0=180 > /dev/servoblaster")
 
@@ -84,47 +66,57 @@ def emergencyBreakDoor():
 # breakDoor() smoothly stop PWM
 # emergencyBreakDoor() stop PWM not smoothly
 
-#GPIO.add_event_detect(pinHallDoorHigh, GPIO.BOTH, callback=callbackHallDoorHigh) 
-#GPIO.add_event_detect(pinHallDoorLow, GPIO.BOTH, callback=callbackHallDoorLow) 
 emergencyBreakDoor()
 try:
   while True:
+    if(not GPIO.input(pinHallDoorHigh)):
+      etatPorte='ouverte'
+    if(not GPIO.input(pinHallDoorLow)):
+      etatPorte='fermee'
+    o.date=str(ephem.now())[0:10]+"12:00:00"
     s=ephem.Sun()
     s.compute()
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
     fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
-    maintenant = ephem.now()
-    if (etatPorte == 'fermee'):#(maintenant > ouverturePorte):
+    maintenant = ephem.Date(ephem.localtime(ephem.now()))
+    print('Ouverture poulailler : ' + str(ouverturePorte))
+    print('Fermeture poulailler : ' + str(fermeturePorte))
+    print('date actuelle        : ' + str(maintenant))
+    print('etat porte           : ' + str(etatPorte))
+    if (maintenant > ouverturePorte and maintenant < fermeturePorte):
       print "Le soleil est leve, la porte doit etre ouverte"
       if (etatPorte == 'fermee'):
         openDoor()
+        print "Atente porte ouverte"
         while(etatPorte == 'fermee'):
           if (GPIO.input(pinHallDoorHigh)):
-            print "Atente porte ouverte"
+            #print "Atente porte ouverte"
+            azerty=1
           else:
             print "Porte ouverte"
             emergencyBreakDoor()
             etatPorte = 'ouverte'
-    elif(etatPorte == 'ouverte'):#(maintenant > fermeturePorte):
+    elif(maintenant > fermeturePorte or maintenant < ouverturePorte):
       print "Le soleil est couche, la porte doit etre fermee"
       if (etatPorte == 'ouverte'):
         closeDoor()
+        print "Atente porte fermee"
         while(etatPorte == 'ouverte'):
           if (GPIO.input(pinHallDoorLow)):
-            print "Atente porte fermee"
+            azerty=0
+            #print "Atente porte fermee"
           else:
             print "Porte fermee"
             emergencyBreakDoor()
             etatPorte = 'fermee'
-    time.sleep(0.25)
+    time.sleep(350)
 except (KeyboardInterrupt, SystemExit):
-  GPIO.cleanup()
   print "Arret du programme par Ctrl+c"
   raise 
 finally:
-  GPIO.cleanup()
   emergencyBreakDoor()
-  #Quand on a fini toute l'application (si celle-ci a une fin), on efface le fichier disant que l'application est lancée
+  GPIO.cleanup()
+  #Quand on a fini toute l'application (si celle-ci a une fin), on efface le fichier disant que l'application est lancee
   os.unlink(pidfile)
   print "Arret du programme..."
   raise 
