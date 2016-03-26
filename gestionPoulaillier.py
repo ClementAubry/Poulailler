@@ -117,7 +117,7 @@ try:
             lastlogtime=str(ephem.Date(ephem.localtime(ephem.now())))
             log(filename,'Date actuelle        : ' + lastlogtime)
             log(filename,'Etat porte           : ' + str(etatPorte))
-    if (ephem.Date(lastlogtime) > ephem.Date(ephem.localtime(ephem.now()+1*ephem.hour))):
+    if (ephem.Date(lastlogtime) > ephem.Date(ephem.Date(ephem.localtime(ephem.now()))+ephem.hour)):
       log(filename,"Hour Log")
       log(filename,'Ouverture poulailler : ' + str(ouverturePorte))
       log(filename,'Fermeture poulailler : ' + str(fermeturePorte))
@@ -127,10 +127,10 @@ try:
     time.sleep(350)
 except (KeyboardInterrupt, SystemExit):
   print "Arret du programme par Ctrl+c"
-  log(filename,"Arrêt du programme par Ctrl+c")
+  log(filename,"Arret du programme par Ctrl+c")
   raise 
 finally:
-  log(filename,"Arrêt du programme")
+  log(filename,"Arret du programme")
   emergencyBreakDoor()
   GPIO.cleanup()
   #Quand on a fini toute l'application (si celle-ci a une fin), on efface le fichier disant que l'application est lancee
