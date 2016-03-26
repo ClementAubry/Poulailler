@@ -48,3 +48,6 @@ elif(maintenant > fermeturePorte):
 
 filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
 print(filename)
+print(ephem.Date(ephem.localtime(ephem.now())))
+print(ephem.Date(ephem.Date(ephem.localtime(ephem.now()))+ephem.hour))
+# print(ephem.Date(ephem.localtime(ephem.Date(ephem.now()) + ephem.hour)))
