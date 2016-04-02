@@ -46,7 +46,10 @@ if (maintenant > ouverturePorte):
 elif(maintenant > fermeturePorte):
     print "Le soleil est couche, la porte doit etre fermee"
 
-filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
+#filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
+today = str(ephem.now()).split()[0]
+filename = today.replace("/","_")+"_poulailler.log"
+#filename = str(ephem.now()).split()[0].replace("/","_")+"_poulailler.log"
 print(filename)
 maintenant = ephem.Date(ephem.localtime(ephem.now()))
 lastlog = ephem.Date(ephem.Date(ephem.localtime(ephem.now()))-59*ephem.minute)
