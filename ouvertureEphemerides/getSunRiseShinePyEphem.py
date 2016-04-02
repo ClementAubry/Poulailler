@@ -48,6 +48,11 @@ elif(maintenant > fermeturePorte):
 
 filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
 print(filename)
-print(ephem.Date(ephem.localtime(ephem.now())))
-print(ephem.Date(ephem.Date(ephem.localtime(ephem.now()))+ephem.hour))
+maintenant = ephem.Date(ephem.localtime(ephem.now()))
+lastlog = ephem.Date(ephem.Date(ephem.localtime(ephem.now()))-59*ephem.minute)
+print("maintenant : "+str(maintenant))
+print("lastlog : "+str(lastlog))
+if ( ephem.Date(ephem.Date(lastlog)+ephem.hour) > maintenant):
+  print "ok"
+
 # print(ephem.Date(ephem.localtime(ephem.Date(ephem.now()) + ephem.hour)))
