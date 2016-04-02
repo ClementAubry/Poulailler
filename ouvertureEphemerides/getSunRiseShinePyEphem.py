@@ -43,7 +43,7 @@ print('Fermeture poulailler : ' + str(fermeturePorte))
 maintenant = ephem.now()
 if (maintenant > ouverturePorte):
     print "Le soleil est leve, la porte doit etre ouverte"
-elif(maintenant > fermeturePorte):
+elif(maintenant < fermeturePorte):
     print "Le soleil est couche, la porte doit etre fermee"
 
 #filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
