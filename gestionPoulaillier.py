@@ -67,6 +67,7 @@ def log(filename,thelog):
 # emergencyBreakDoor() stop PWM not smoothly
 
 emergencyBreakDoor()
+lastlogtime = ephem.Date(ephem.Date(ephem.localtime(ephem.now()))-59*ephem.minute)
 try:
   while True:
     filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
@@ -80,7 +81,6 @@ try:
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
     fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
     maintenant = ephem.Date(ephem.localtime(ephem.now()))
-    lastlogtime = maintenant
     if (maintenant > ouverturePorte and maintenant < fermeturePorte):
       if (etatPorte == 'fermee'):
         log(filename,"Le soleil est leve, la porte doit etre ouverte")
@@ -117,7 +117,7 @@ try:
             lastlogtime=str(ephem.Date(ephem.localtime(ephem.now())))
             log(filename,'Date actuelle        : ' + lastlogtime)
             log(filename,'Etat porte           : ' + str(etatPorte))
-    if (ephem.Date(lastlogtime) > ephem.Date(ephem.Date(ephem.localtime(ephem.now()))+ephem.hour)):
+    if (ephem.Date(ephem.Date(lastlogtime)+ephem.hour) > ephem.Date(maintenant)):
       log(filename,"Hour Log")
       log(filename,'Ouverture poulailler : ' + str(ouverturePorte))
       log(filename,'Fermeture poulailler : ' + str(fermeturePorte))
