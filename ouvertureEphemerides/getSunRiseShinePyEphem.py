@@ -45,3 +45,14 @@ if (maintenant > ouverturePorte):
     print "Le soleil est leve, la porte doit etre ouverte"
 elif(maintenant < fermeturePorte):
     print "Le soleil est couche, la porte doit etre fermee"
+
+filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
+print(filename)
+maintenant = ephem.Date(ephem.localtime(ephem.now()))
+lastlog = ephem.Date(ephem.Date(ephem.localtime(ephem.now()))-59*ephem.minute)
+print("maintenant : "+str(maintenant))
+print("lastlog : "+str(lastlog))
+if ( ephem.Date(ephem.Date(lastlog)+ephem.hour) > maintenant):
+  print "ok"
+
+# print(ephem.Date(ephem.localtime(ephem.Date(ephem.now()) + ephem.hour)))

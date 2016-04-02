@@ -70,7 +70,7 @@ emergencyBreakDoor()
 lastlogtime = ephem.Date(ephem.Date(ephem.localtime(ephem.now()))-59*ephem.minute)
 try:
   while True:
-    filename = str(ephem.now())[0:10].replace(" ","_").replace("/","_")+"_poulailler.log".strip()
+    filename = str(ephem.now())[0:10].strip().replace("/","_")+"_poulailler.log"
     if(not GPIO.input(pinHallDoorHigh)):
       etatPorte='ouverte'
     if(not GPIO.input(pinHallDoorLow)):
