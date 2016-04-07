@@ -80,7 +80,7 @@ try:
     s=ephem.Sun()
     s.compute()
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
-    fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
+    fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 0 * ephem.minute)
     maintenant = ephem.Date(ephem.localtime(ephem.now()))
     if (maintenant > ouverturePorte and maintenant < fermeturePorte):
       if (etatPorte == 'fermee'):
@@ -119,7 +119,7 @@ try:
             log(filename,'Date actuelle        : ' + lastlogtime)
             log(filename,'Etat porte           : ' + str(etatPorte))
     if (ephem.Date(ephem.Date(lastlogtime)+ephem.hour) > ephem.Date(maintenant)):
-      log(filename,"Hour Log")
+      log(filename,"Hourly Log")
       log(filename,'Ouverture poulailler : ' + str(ouverturePorte))
       log(filename,'Fermeture poulailler : ' + str(fermeturePorte))
       lastlogtime = str(ephem.Date(ephem.localtime(ephem.now())))
