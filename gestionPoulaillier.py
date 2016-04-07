@@ -80,7 +80,7 @@ try:
     s=ephem.Sun()
     s.compute()
     ouverturePorte =  ephem.Date(ephem.localtime(o.previous_rising(s, use_center=True)))
-    fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 15 * ephem.minute)
+    fermeturePorte = ephem.Date(ephem.Date(ephem.localtime(o.next_setting(s, use_center=True))) + 0 * ephem.minute)
     maintenant = ephem.Date(ephem.localtime(ephem.now()))
     if (maintenant > ouverturePorte and maintenant < fermeturePorte):
       if (etatPorte == 'fermee'):
