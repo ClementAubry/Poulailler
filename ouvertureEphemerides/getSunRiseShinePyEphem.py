@@ -3,7 +3,7 @@ import ephem
 o=ephem.Observer()
 o.lat='48.395574'
 o.long='-4.333449'
-# o.elev=143 #elevation in meters, http://veloroutes.org/elevation/?location=kerudu+29470+loperhet&units=m
+o.elev=143 #elevation in meters, http://veloroutes.org/elevation/?location=kerudu+29470+loperhet&units=m
 # o.horizon = '-6' #-6=civil twilight, -12=nautical, -18=astronomical
 # o.date = '2016/6/21'
 s=ephem.Sun()
@@ -35,7 +35,7 @@ print('Lumiere a partir de : ' + str(beg_twilight))
 print('Couche a partir de : ' + str(end_twilight))
 
 ouverturePorte = ephem.Date(sunrise)
-fermeturePorte = ephem.Date(ephem.Date(sunset) + 30 * ephem.minute)
+fermeturePorte = ephem.Date(ephem.Date(sunset) + 0 * ephem.minute)
 print('Ouverture poulailler : ' + str(ouverturePorte))
 print('Fermeture poulailler : ' + str(fermeturePorte))
 
