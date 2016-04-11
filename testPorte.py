@@ -16,8 +16,8 @@ import RPi.GPIO as GPIO
 #6 on P1-18 GPIO-24
 #7 on P1-22 GPIO-25
 
-pinHallDoorHigh=2
-pinHallDoorLow=3
+pinHallDoorHigh=14
+pinHallDoorLow=15
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(pinHallDoorHigh, GPIO.IN)
 GPIO.setup(pinHallDoorLow, GPIO.IN)

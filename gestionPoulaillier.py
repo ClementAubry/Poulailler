@@ -26,8 +26,8 @@ import RPi.GPIO as GPIO
 #   sys.exit()
 # file(pidfile, 'w').write(pid)
 
-pinHallDoorHigh=2
-pinHallDoorLow=3
+pinHallDoorHigh=14
+pinHallDoorLow=15
 GPIO.setmode(GPIO.BCM)     # set up BCM GPIO numbering  
 GPIO.setup(pinHallDoorHigh, GPIO.IN)
 GPIO.setup(pinHallDoorLow, GPIO.IN)
